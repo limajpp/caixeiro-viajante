@@ -4,17 +4,14 @@ public class KdTree {
 
     private Node root;
     private int size;
-    private static final RectHV CONTAINER = new RectHV(0, 0, 1, 1);
 
     private static class Node {
         private final Point2D p;
-        private final RectHV rect;
         private Node lb;
         private Node rt;
 
-        public Node(Point2D p, RectHV rect) {
+        public Node(Point2D p) {
             this.p = p;
-            this.rect = rect;
         }
     }
 
@@ -33,13 +30,13 @@ public class KdTree {
 
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("O ponto não pode ser nulo.");
-        root = insert(root, p, CONTAINER, true);
+        root = insert(root, p, true);
     }
 
-    private Node insert(Node x, Point2D p, RectHV rect, boolean vertical) {
+    private Node insert(Node x, Point2D p, boolean vertical) {
         if (x == null) {
             size++;
-            return new Node(p, rect);
+            return new Node(p);
         }
 
         if (x.p.equals(p)) {
@@ -48,19 +45,15 @@ public class KdTree {
 
         if (vertical) {
             if (p.x() < x.p.x()) {
-                RectHV newRect = new RectHV(rect.xmin(), rect.ymin(), x.p.x(), rect.ymax());
-                x.lb = insert(x.lb, p, newRect, !vertical);
+                x.lb = insert(x.lb, p, !vertical);
             } else {
-                RectHV newRect = new RectHV(x.p.x(), rect.ymin(), rect.xmax(), rect.ymax());
-                x.rt = insert(x.rt, p, newRect, !vertical);
+                x.rt = insert(x.rt, p, !vertical);
             }
         } else {
             if (p.y() < x.p.y()) {
-                RectHV newRect = new RectHV(rect.xmin(), rect.ymin(), rect.xmax(), x.p.y());
-                x.lb = insert(x.lb, p, newRect, !vertical);
+                x.lb = insert(x.lb, p, !vertical);
             } else {
-                RectHV newRect = new RectHV(rect.xmin(), x.p.y(), rect.xmax(), rect.ymax());
-                x.rt = insert(x.rt, p, newRect, !vertical);
+                x.rt = insert(x.rt, p, !vertical);
             }
         }
         return x;
@@ -98,17 +91,35 @@ public class KdTree {
         }
 
         Node firstSubtree, secondSubtree;
-        if ((vertical && p.x() < x.p.x()) || (!vertical && p.y() < x.p.y())) {
-            firstSubtree = x.lb;
-            secondSubtree = x.rt;
+        if (vertical) {
+            if (p.x() < x.p.x()) {
+                firstSubtree = x.lb;
+                secondSubtree = x.rt;
+            } else {
+                firstSubtree = x.rt;
+                secondSubtree = x.lb;
+            }
         } else {
-            firstSubtree = x.rt;
-            secondSubtree = x.lb;
+            if (p.y() < x.p.y()) {
+                firstSubtree = x.lb;
+                secondSubtree = x.rt;
+            } else {
+                firstSubtree = x.rt;
+                secondSubtree = x.lb;
+            }
         }
 
         champion = nearest(firstSubtree, p, champion, !vertical);
 
-        if (secondSubtree != null && secondSubtree.rect.distanceSquaredTo(p) < p.distanceSquaredTo(champion)) {
+        double distToChampion = p.distanceSquaredTo(champion);
+        double distToSplit;
+        if (vertical) {
+            distToSplit = (x.p.x() - p.x()) * (x.p.x() - p.x());
+        } else {
+            distToSplit = (x.p.y() - p.y()) * (x.p.y() - p.y());
+        }
+
+        if (distToSplit < distToChampion) {
             champion = nearest(secondSubtree, p, champion, !vertical);
         }
 

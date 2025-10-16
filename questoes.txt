@@ -6,29 +6,44 @@ Orientador: Prof. Me Ricardo Carubbi
 Trabalho: Problema do Caixeiro Viajante
 
 Informe abaixo o(s) nome(s):
-- Aluno(a) 1: ______________________________
-- Aluno(a) 2: ______________________________
+- Aluno(a) 1: João Pedro Cavalcante Araripe e Lima
 
 Q1. Explique como você implementou a heurística de inserção pelo vizinho mais próximo.
 Comente também como você atualiza as ligações da lista encadeada circular após inserir o novo ponto.
 
 Resposta:
+A heurística de inserção pelo vizinho mais próximo foi implementada no método insertNearestNaive(Point p) da classe Tour.java. A lógica segue os seguintes passos:
+
+    Caso Base: Primeiramente, o método verifica se o tour está vazio (start == null). Se estiver, o novo ponto p se torna o primeiro e único nó, e sua referência next aponta para si mesmo, criando a estrutura circular.
+
+    Busca pelo Vizinho Mais Próximo: Se o tour já contém pontos, o algoritmo inicia uma busca linear. Ele percorre cada Node da lista encadeada circular, um por um. Para cada nó, ele calcula a distância euclidiana entre o ponto armazenado no nó (currentNode.point) e o novo ponto p a ser inserido.
+
+    Armazenamento do Melhor Candidato: Durante a varredura, o algoritmo mantém duas variáveis: minDistance, que armazena a menor distância encontrada até o momento, e bestPrevNode, que guarda a referência para o nó correspondente a essa menor distância.
+
+    Inserção do Novo Ponto: Após percorrer todo o ciclo e encontrar o nó bestPrevNode (o vizinho mais próximo), a inserção é realizada. Um novo Node é criado para o ponto p. A ligação da lista é atualizada da seguinte forma: o ponteiro next do bestPrevNode passa a apontar para o newNode, e o ponteiro next do newNode passa a apontar para o antigo sucessor de bestPrevNode. Isso efetivamente insere o novo ponto no tour logo após seu vizinho mais próximo, com uma complexidade de atualização de ponteiros de O(1).
 
 
 Q2. Explique por que é melhor usar uma lista encadeada circular em vez de um vetor.
 Considere a complexidade das operações de inserção e remoção de pontos.
 
 Resposta:
+Uma lista encadeada circular é superior a um vetor (ou ArrayList) para este problema específico devido à eficiência da operação de inserção.
+
+    Complexidade de Inserção em Vetor: Em um vetor, os elementos são armazenados em posições de memória contíguas. Para inserir um novo ponto no meio do tour (entre a posição i e i+1), todos os elementos a partir da posição i+1 até o final do vetor precisariam ser deslocados uma posição para a direita para abrir espaço. Essa operação de deslocamento tem uma complexidade de tempo O(N), onde N é o número de pontos no tour.
+
+    Complexidade de Inserção em Lista Encadeada: Em uma lista encadeada, cada nó armazena apenas uma referência (ponteiro) para o próximo nó. Uma vez que encontramos o local da inserção (o nó bestPrevNode), a inserção em si requer apenas a atualização de dois ponteiros: o next de bestPrevNode e o next do novo nó. Essa operação é feita em tempo constante, O(1).
+
+Considerando que a heurística insere N pontos um a um, a diferença é gritante. A busca pelo ponto de inserção custa O(N) em ambos os casos na versão ingênua, mas a operação de inserção em si torna a lista encadeada muito mais adequada e performática para este algoritmo.
 
 
 Q3. Preencha os comprimentos calculados pela heurística do vizinho mais próximo.
 
 | Arquivo de dados | Vizinho mais próximo |
 | ---------------- | -------------------- |
-| tsp10.txt        |                      |
-| tsp100.txt       |                      |
-| tsp1000.txt      |                      |
-| usa13509.txt     |                      |
+| tsp10.txt        |      1566.1363       |
+| tsp100.txt       |      7389.9297       |
+| tsp1000.txt      |      27868.7106      |
+| usa13509.txt     |      77449.9794      |
 
 Q4. Realize a análise de tempo abaixo:
 
@@ -38,14 +53,14 @@ Q4. Realize a análise de tempo abaixo:
 
 | n      | Tempo (s) ingênuo | Tempo (s) com KdTree |
 | ------ | ----------------- | -------------------- |
-| 1000   |                   |                      |
-| 2000   |                   |                      |
-| 4000   |                   |                      |
-| 8000   |                   |                      |
-| 16000  |                   |                      |
-| 32000  |                   |                      |
-| 64000  |                   |                      |
-| 128000 |                   |                      |
-| 256000 |                   |                      |
-| 512000 |                   |                      |
-| 1024000|                   |                      |
+| 1000   |   0.044 segundos  |    0.171 segundos    |
+| 2000   |   0.13 segundos   |    0.253 segundos    |
+| 4000   |   0.375 segundos  |    0.412 segundos    |
+| 8000   |   1.294 segundos  |    0.925 segundos    |
+| 16000  |   5.134 segundos  |    1.682 segundos    |
+| 32000  |   20.177 segundos |    3.249 segundos    |
+| 64000  |   94.875 segundos |    5.767 segundos    |
+| 128000 |   434.281 segundos|    12.16 segundos    |
+| 256000 | 2172.772 segundos |    24.18 segundos    |
+| 512000 | 9777.335 segundos |    48.226 segundos   | (Estimei valores para o ingênuo desse valor de n, pois o tempo de execução estava inviável)
+| 1024000| 44000.729 segundos|    98.13 segundos    | (Estimei valores para o ingênuo desse valor de n, pois o tempo de execução estava inviável)
