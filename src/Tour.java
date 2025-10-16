@@ -81,7 +81,34 @@ public class Tour {
     }
 
     public void insertNearestNaive(Point p) {
-        throw new UnsupportedOperationException("Versão com KdTree não implementada.");
+        if (start == null) {
+            start = new Node();
+            start.point = p;
+            start.next = start;
+            count = 1;
+            return;
+        }
+
+        Node bestPrevNode = null;
+        double minDistance = Double.POSITIVE_INFINITY;
+
+        Node currentNode = start;
+
+        do {
+            double currentDistance = currentNode.point.distanceTo(p);
+            if (currentDistance < minDistance) {
+                minDistance = currentDistance;
+                bestPrevNode = currentNode;
+            }
+            currentNode = currentNode.next;
+        } while (currentNode != start);
+
+        Node newNode = new Node();
+        newNode.point = p;
+        assert bestPrevNode != null;
+        newNode.next = bestPrevNode.next;
+        bestPrevNode.next = newNode;
+        count++;
     }
 
     public void insertNearestKd(Point p) {
