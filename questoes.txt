@@ -1,0 +1,51 @@
+*****************************************************************************************************
+T290 - Resolução de Problemas com Grafos
+Orientador: Prof. Me Ricardo Carubbi
+*****************************************************************************************************
+
+Trabalho: Problema do Caixeiro Viajante
+
+Informe abaixo o(s) nome(s):
+- Aluno(a) 1: ______________________________
+- Aluno(a) 2: ______________________________
+
+Q1. Explique como você implementou a heurística de inserção pelo vizinho mais próximo.
+Comente também como você atualiza as ligações da lista encadeada circular após inserir o novo ponto.
+
+Resposta:
+
+
+Q2. Explique por que é melhor usar uma lista encadeada circular em vez de um vetor.
+Considere a complexidade das operações de inserção e remoção de pontos.
+
+Resposta:
+
+
+Q3. Preencha os comprimentos calculados pela heurística do vizinho mais próximo.
+
+| Arquivo de dados | Vizinho mais próximo |
+| ---------------- | -------------------- |
+| tsp10.txt        |                      |
+| tsp100.txt       |                      |
+| tsp1000.txt      |                      |
+| usa13509.txt     |                      |
+
+Q4. Realize a análise de tempo abaixo:
+
+- Estime o tempo de execução (em segundos) da heurística.
+- Execute a heurística para \(n = 1000\) e dobre \(n\) repetidamente até que o tempo de execução ultrapasse 60 segundos.
+- Utilize o **TSPTimer** com a opção **-Xint** para desativar otimizações do compilador.
+
+| n      | Tempo (s) ingênuo | Tempo (s) com KdTree |
+| ------ | ----------------- | -------------------- |
+| 1000   |                   |                      |
+| 2000   |                   |                      |
+| 4000   |                   |                      |
+| 8000   |                   |                      |
+| 16000  |                   |                      |
+| 32000  |                   |                      |
+| 64000  |                   |                      |
+| 128000 |                   |                      |
+| 256000 |                   |                      |
+| 512000 |                   |                      |
+| 1024000|                   |                      |
